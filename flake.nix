@@ -1,18 +1,23 @@
 {
   inputs = {
-    nixpkgs.url         = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-utils.url     = "github:numtide/flake-utils";
-    nix-alien-pkgs.url  = "github:thiagokokada/nix-alien";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+    nix-alien-pkgs.url = "github:thiagokokada/nix-alien";
   };
 
-  outputs = { self, nixpkgs, flake-utils, nix-alien-pkgs, ... }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        overlays = [ nix-alien-pkgs.overlays.default ];
+  outputs = {
+    self,
+    nixpkgs,
+    flake-utils,
+    nix-alien-pkgs,
+    ...
+  }:
+    flake-utils.lib.eachDefaultSystem (
+      system: let
+        overlays = [nix-alien-pkgs.overlays.default];
         pkgs = import nixpkgs {
-            inherit system overlays;
+          inherit system overlays;
         };
-
 
         vhuit64 = pkgs.stdenv.mkDerivation rec {
           name = "vhuit64";
@@ -22,7 +27,7 @@
             hash = "sha256-TjjycoyaHxQyNukTSNBHmwkXx5FAEnHyOJu4HgkN31I=";
           };
 
-          buildInputs = with pkgs; [ upx ];
+          buildInputs = with pkgs; [upx];
 
           unpackPhase = "true";
 
@@ -41,17 +46,16 @@
           ${pkgs.nix-alien}/bin/nix-alien-ld ${vhuit64}/bin/vhuit64
         '';
       in
-      with pkgs;
-      {
-        devShells.default = mkShell rec {
-          buildInputs = [
-            vhuit64
-            virtualhere-client-gui
-            nix-alien-ld
-          ];
-        };
+        with pkgs; {
+          devShells.default = mkShell rec {
+            buildInputs = [
+              vhuit64
+              virtualhere-client-gui
+              nix-alien-ld
+            ];
+          };
 
-        packages.default = virtualhere-client-gui;
-      }
+          packages.default = virtualhere-client-gui;
+        }
     );
 }
