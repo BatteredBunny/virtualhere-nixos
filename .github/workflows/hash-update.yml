@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  update-hash:
+  update-hashes:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,16 +19,30 @@ jobs:
           nix_path: nixpkgs=channel:nixos-unstable
       - name: Install packages
         run: nix-env -i jq alejandra -f '<nixpkgs>'
-      - name: Check hashes
+      - name: Check gui hashes
         run: |
-          export CURRENT_HASH=$(cat flake.nix | grep  'hash = ".*";')
+          export CURRENT_HASH=$(cat gui.nix | grep  'hash = ".*";')
           export NEW_HASH="hash = $(nix store prefetch-file https://www.virtualhere.com/sites/default/files/usbclient/vhuit64 --json | jq .hash);"
 
           if [ "$NEW_HASH" != "$CURRENT_HASH" ]; then
-            sed -i "s,$CURRENT_HASH,$NEW_HASH," flake.nix
-            alejandra flake.nix
+            sed -i "s,$CURRENT_HASH,$NEW_HASH," gui.nix
+            alejandra .
           fi
       - uses: EndBug/add-and-commit@v9
         with:
             default_author: github_actions
             message: "Updated vhuit64 file hash"
+
+      - name: Check cli hashes
+        run: |
+          export CURRENT_HASH=$(cat cli.nix | grep  'hash = ".*";')
+          export NEW_HASH="hash = $(nix store prefetch-file https://www.virtualhere.com/sites/default/files/usbclient/vhclientx86_64 --json | jq .hash);"
+
+          if [ "$NEW_HASH" != "$CURRENT_HASH" ]; then
+            sed -i "s,$CURRENT_HASH,$NEW_HASH," cli.nix
+            alejandra .
+          fi
+      - uses: EndBug/add-and-commit@v9
+        with:
+          default_author: github_actions
+          message: "Updated vhclientx86_64 file hash"

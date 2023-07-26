@@ -6,7 +6,6 @@
   };
 
   outputs = {
-    self,
     nixpkgs,
     flake-utils,
     nix-alien-pkgs,
@@ -19,43 +18,22 @@
           inherit system overlays;
         };
 
-        vhuit64 = pkgs.stdenv.mkDerivation rec {
-          name = "vhuit64";
-
-          src = pkgs.fetchurl {
-            url = "https://www.virtualhere.com/sites/default/files/usbclient/vhuit64";
-            hash = "sha256-E7DH7xiIzG76yuGswkcQL/P8XJRsA0V2KQ2nclbQFNg=";
-          };
-
-          buildInputs = with pkgs; [upx];
-
-          unpackPhase = "true";
-
-          installPhase = ''
-            export HOME=$(mktemp -d)
-            mkdir -p $out/bin
-
-            cp ${src} vhuit64
-            chmod 0755 vhuit64
-            upx -d vhuit64
-            cp vhuit64 $out/bin/vhuit64
-          '';
-        };
-
-        virtualhere-client-gui = pkgs.writeShellScriptBin "virtualhere-client-gui" ''
-          ${pkgs.nix-alien}/bin/nix-alien-ld ${vhuit64}/bin/vhuit64
-        '';
+        virtualhere-client-gui = pkgs.callPackage ./gui.nix {};
+        virtualhere-client-cli = pkgs.callPackage ./cli.nix {};
       in
         with pkgs; {
-          devShells.default = mkShell rec {
+          devShells.default = mkShell {
             buildInputs = [
-              vhuit64
               virtualhere-client-gui
-              nix-alien-ld
+              virtualhere-client-cli
+
+              usbutils
             ];
           };
 
           packages.default = virtualhere-client-gui;
+          packages.gui = virtualhere-client-gui;
+          packages.cli = virtualhere-client-cli;
         }
     );
 }
