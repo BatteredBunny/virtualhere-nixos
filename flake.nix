@@ -24,7 +24,7 @@
 
           src = pkgs.fetchurl {
             url = "https://www.virtualhere.com/sites/default/files/usbclient/vhuit64";
-            hash = "sha256-TjjycoyaHxQyNukTSNBHmwkXx5FAEnHyOJu4HgkN31I=";
+            hash = "sha256-E7DH7xiIzG76yuGswkcQL/P8XJRsA0V2KQ2nclbQFNg=";
           };
 
           buildInputs = with pkgs; [upx];
