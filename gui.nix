@@ -10,7 +10,7 @@
 
     src = fetchurl {
       url = "https://www.virtualhere.com/sites/default/files/usbclient/${name}";
-      hash = "sha256-E7DH7xiIzG76yuGswkcQL/P8XJRsA0V2KQ2nclbQFNg=";
+      hash = "sha256-XPzABym+RgHf4m531mz67Ghve+eYJLlHByCP0oQW3Vg=";
     };
 
     buildInputs = with pkgs; [upx];
