@@ -25,10 +25,9 @@
       with pkgs; {
         devShells.default = mkShell {
           buildInputs = [
-            virtualhere-client-gui
-            virtualhere-client-cli
-
             usbutils
+            nixpkgs-fmt
+            nix-alien
           ];
         };
 

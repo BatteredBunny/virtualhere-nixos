@@ -1,7 +1,6 @@
-{
-  stdenv,
-  fetchurl,
-  ...
+{ stdenv
+, fetchurl
+, ...
 }:
 stdenv.mkDerivation rec {
   name = "vhclientx86_64";

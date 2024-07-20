@@ -1,10 +1,11 @@
-{
-  pkgs,
-  stdenv,
-  writeShellScriptBin,
-  fetchurl,
-  ...
-}: let
+{ pkgs
+, stdenv
+, writeShellScriptBin
+, fetchurl
+, lib
+, ...
+}:
+let
   vhuit64 = stdenv.mkDerivation rec {
     name = "vhuit64";
 
@@ -13,7 +14,7 @@
       hash = "sha256-mkcA31TdaH8SkXZwIExzYFQHvNc45VOd1jjO03H+fX0=";
     };
 
-    buildInputs = with pkgs; [upx];
+    buildInputs = with pkgs; [ upx ];
 
     unpackPhase = "true";
 
@@ -24,7 +25,27 @@
       upx -d $out/bin/${name}
     '';
   };
+
+  NIX_LD_LIBRARY_PATH = with pkgs;
+    lib.makeLibraryPath [
+      cairo.out
+      fontconfig.lib
+      gdk-pixbuf.out
+      glib.out
+      gtk3.out
+      libGL.out
+      libgcc.lib
+      libxkbcommon.out
+      libz.out
+      pango.out
+      wayland-scanner.out
+      xorg.libSM.out
+      xorg.libX11.out
+    ];
+  NIX_LD = lib.fileContents "${stdenv.cc}/nix-support/dynamic-linker";
 in
-  writeShellScriptBin "virtualhere-client-gui" ''
-    ${pkgs.nix-alien}/bin/nix-alien-ld ${vhuit64}/bin/vhuit64
-  ''
+pkgs.writeShellScriptBin "virtualhere-client-gui" ''
+  export NIX_LD_LIBRARY_PATH='${NIX_LD_LIBRARY_PATH}'${"\${NIX_LD_LIBRARY_PATH:+':'}$NIX_LD_LIBRARY_PATH"}
+  export NIX_LD='${NIX_LD}'
+  ${vhuit64}/bin/vhuit64 "$@"
+''

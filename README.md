@@ -7,7 +7,7 @@
 ## GUI
 
 ```
-sudo nix run github:BatteredBunny/virtualhere-nixos
+sudo nix run github:BatteredBunny/virtualhere-nixos --impure
 ```
 
 ## CLI
