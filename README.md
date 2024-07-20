@@ -6,6 +6,7 @@
 
 ## GUI
 
+Enable ``programs.nix-ld.enable = true;`` in your nixos `configuration.nix`
 ```
 sudo nix run github:BatteredBunny/virtualhere-nixos --impure
 ```
