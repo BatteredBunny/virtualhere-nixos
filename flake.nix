@@ -5,35 +5,38 @@
     nix-alien-pkgs.url = "github:thiagokokada/nix-alien";
   };
 
-  outputs = {
-    nixpkgs,
-    flake-utils,
-    nix-alien-pkgs,
-    ...
-  }:
+  outputs =
+    { nixpkgs
+    , flake-utils
+    , nix-alien-pkgs
+    , ...
+    }:
     flake-utils.lib.eachDefaultSystem (
-      system: let
-        overlays = [nix-alien-pkgs.overlays.default];
+      system:
+      let
+        overlays = [ nix-alien-pkgs.overlays.default ];
         pkgs = import nixpkgs {
           inherit system overlays;
         };
 
-        virtualhere-client-gui = pkgs.callPackage ./gui.nix {};
-        virtualhere-client-cli = pkgs.callPackage ./cli.nix {};
+        virtualhere-client-gui = pkgs.callPackage ./gui.nix { };
+        virtualhere-client-cli = pkgs.callPackage ./cli.nix { };
       in
-        with pkgs; {
-          devShells.default = mkShell {
-            buildInputs = [
-              virtualhere-client-gui
-              virtualhere-client-cli
+      with pkgs; {
+        devShells.default = mkShell {
+          buildInputs = [
+            virtualhere-client-gui
+            virtualhere-client-cli
 
-              usbutils
-            ];
-          };
+            usbutils
+          ];
+        };
 
-          packages.default = virtualhere-client-gui;
-          packages.gui = virtualhere-client-gui;
-          packages.cli = virtualhere-client-cli;
-        }
+        packages = {
+          default = virtualhere-client-gui;
+          gui = virtualhere-client-gui;
+          cli = virtualhere-client-cli;
+        };
+      }
     );
 }
