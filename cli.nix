@@ -7,7 +7,7 @@ stdenv.mkDerivation rec {
 
   src = fetchurl {
     url = "https://www.virtualhere.com/sites/default/files/usbclient/${name}";
-    hash = "sha256-3TDlEfz5oJmkGRSn/MujD8miUjv33e/jGjbBzXkxDXQ=";
+    hash = "sha256-P4TK/9J3V3ZwUoFPlSrDtYMQbV5HA+/0qJp4BQ/WnkA=";
   };
 
   unpackPhase = "true";
