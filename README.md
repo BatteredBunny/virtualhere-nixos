@@ -1,19 +1,32 @@
-# virtualhere
+# Virtualhere-nixos
 
-## Instructions
-1. You need usbip kernel module to get it running, add this to your /etc/nixos/configuration.nix ``boot.extraModulePackages = with config.boot.kernelPackages; [ usbip ];``
-2. ``sudo nix run github:BatteredBunny/virtualhere-nixos``
+Virtualhere programs packaged for NixOS.
 
-## GUI
+## Packages
 
-Enable ``programs.nix-ld.enable = true;`` in your nixos `configuration.nix`
+- virtualhere-client-gui
+- virtualhere-client-cli
+
+[Client info](https://www.virtualhere.com/usb_client_software)
+
+## Installing the flake
+
+```nix
+# flake.nix
+inputs = {
+    virtualhere.url = "github:BatteredBunny/virtualhere-nixos";
+};
 ```
-sudo nix run github:BatteredBunny/virtualhere-nixos --impure
-```
 
-## CLI
+```nix
+# configuration.nix
+nixpkgs.overlays = [
+    inputs.virtualhere.overlays.default
+];
 
-[Check the usage instructions](https://www.virtualhere.com/linux_console)
-```
-sudo nix run github:BatteredBunny/virtualhere-nixos#cli
+programs.nix-ld.enable = true;
+
+boot.extraModulePackages = with config.boot.kernelPackages; [
+    usbip
+];
 ```

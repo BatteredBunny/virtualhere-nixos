@@ -21,11 +21,11 @@ jobs:
         run: nix-env -i jq nixpkgs-fmt -f '<nixpkgs>'
       - name: Check gui hashes
         run: |
-          export CURRENT_HASH=$(cat gui.nix | grep  'hash = ".*";')
+          export CURRENT_HASH=$(cat pkgs/gui-client.nix | grep  'hash = ".*";')
           export NEW_HASH="hash = $(nix store prefetch-file https://www.virtualhere.com/sites/default/files/usbclient/vhuit64 --json | jq .hash);"
 
           if [ "$NEW_HASH" != "$CURRENT_HASH" ]; then
-            sed -i "s,$CURRENT_HASH,$NEW_HASH," gui.nix
+            sed -i "s,$CURRENT_HASH,$NEW_HASH," pkgs/gui-client.nix
             nixpkgs-fmt .
           fi
       - uses: EndBug/add-and-commit@v9
@@ -35,11 +35,11 @@ jobs:
 
       - name: Check cli hashes
         run: |
-          export CURRENT_HASH=$(cat cli.nix | grep  'hash = ".*";')
+          export CURRENT_HASH=$(cat pkgs/cli-client.nix | grep  'hash = ".*";')
           export NEW_HASH="hash = $(nix store prefetch-file https://www.virtualhere.com/sites/default/files/usbclient/vhclientx86_64 --json | jq .hash);"
 
           if [ "$NEW_HASH" != "$CURRENT_HASH" ]; then
-            sed -i "s,$CURRENT_HASH,$NEW_HASH," cli.nix
+            sed -i "s,$CURRENT_HASH,$NEW_HASH," pkgs/cli-client.nix
             nixpkgs-fmt .
           fi
       - uses: EndBug/add-and-commit@v9
