@@ -36,6 +36,6 @@ boot.extraModulePackages = with config.boot.kernelPackages; [
 Must be ran with raised privileges!
 
 ```bash
-nix shell github:BatteredBunny/virtualhere-nixos#virtualhere-client-gui --impure
+nix shell github:BatteredBunny/virtualhere-nixos#virtualhere-client-gui
 sudo -E virtualhere-client-gui
 ```

@@ -38,17 +38,12 @@ let
       libxkbcommon.out
       libz.out
       pango.out
-      util-linux.out
-      glib.out
       wayland-scanner.out
       xorg.libSM.out
       xorg.libX11.out
-      mount.out
     ];
-  NIX_LD = lib.fileContents "${stdenv.cc}/nix-support/dynamic-linker";
 in
 pkgs.writeShellScriptBin "virtualhere-client-gui" ''
   export NIX_LD_LIBRARY_PATH='${NIX_LD_LIBRARY_PATH}'${"\${NIX_LD_LIBRARY_PATH:+':'}$NIX_LD_LIBRARY_PATH"}
-  export NIX_LD='${NIX_LD}'
-  ${vhuit64}/bin/vhuit64 "$@"
+  exec ${vhuit64}/bin/vhuit64 "$@"
 ''

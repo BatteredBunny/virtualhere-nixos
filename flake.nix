@@ -1,13 +1,11 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nix-alien-pkgs.url = "github:thiagokokada/nix-alien";
   };
 
   outputs =
     { self
     , nixpkgs
-    , nix-alien-pkgs
     , ...
     }:
     let
@@ -17,9 +15,8 @@
 
       forAllSystems = lib.genAttrs systems;
 
-      overlays = [ nix-alien-pkgs.overlays.default ];
       nixpkgsFor = forAllSystems (system: import nixpkgs {
-        inherit system overlays;
+        inherit system;
       });
     in
     {
@@ -33,8 +30,6 @@
               [
                 usbutils
                 nixpkgs-fmt
-              ] ++ lib.optionals pkgs.stdenv.isLinux [
-                nix-alien
               ];
           };
         });
