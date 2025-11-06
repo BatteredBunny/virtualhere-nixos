@@ -1,6 +1,5 @@
 { pkgs
 , stdenv
-, writeShellScriptBin
 , fetchurl
 , lib
 , ...
@@ -34,13 +33,17 @@ let
       glib.out
       gtk3.out
       libGL.out
+      wayland.out
       libgcc.lib
       libxkbcommon.out
       libz.out
       pango.out
+      util-linux.out
+      glib.out
       wayland-scanner.out
       xorg.libSM.out
       xorg.libX11.out
+      mount.out
     ];
   NIX_LD = lib.fileContents "${stdenv.cc}/nix-support/dynamic-linker";
 in

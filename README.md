@@ -7,7 +7,7 @@ Virtualhere programs packaged for NixOS.
 - virtualhere-client-gui
 - virtualhere-client-cli
 
-[Client info](https://www.virtualhere.com/usb_client_software)
+[Virtualhere usage](https://www.virtualhere.com/usb_client_software)
 
 ## Installing the flake
 
@@ -29,4 +29,13 @@ programs.nix-ld.enable = true;
 boot.extraModulePackages = with config.boot.kernelPackages; [
     usbip
 ];
+```
+
+## Running packages from flake
+
+Must be ran with raised privileges!
+
+```bash
+nix shell github:BatteredBunny/virtualhere-nixos#virtualhere-client-gui --impure
+sudo virtualhere-client-gui
 ```
