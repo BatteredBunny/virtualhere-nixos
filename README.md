@@ -37,5 +37,5 @@ Must be ran with raised privileges!
 
 ```bash
 nix shell github:BatteredBunny/virtualhere-nixos#virtualhere-client-gui --impure
-sudo virtualhere-client-gui
+sudo -E virtualhere-client-gui
 ```
