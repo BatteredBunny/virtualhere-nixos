@@ -40,8 +40,8 @@
       );
 
       overlays.default = final: prev: {
-        virtualhere-client-gui = final.callPackage ./pkgs/gui-client.nix { };
-        virtualhere-client-cli = final.callPackage ./pkgs/cli-client.nix { };
+        virtualhere-client-gui = final.callPackage ./pkgs/virtualhere-client-gui { };
+        virtualhere-client-cli = final.callPackage ./pkgs/virtualhere-client-cli { };
       };
 
       packages = forAllSystems (
