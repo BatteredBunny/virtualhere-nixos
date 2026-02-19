@@ -4,9 +4,10 @@
   };
 
   outputs =
-    { self
-    , nixpkgs
-    , ...
+    {
+      self,
+      nixpkgs,
+      ...
     }:
     let
       inherit (nixpkgs) lib;
@@ -15,31 +16,36 @@
 
       forAllSystems = lib.genAttrs systems;
 
-      nixpkgsFor = forAllSystems (system: import nixpkgs {
-        inherit system;
-      });
+      nixpkgsFor = forAllSystems (
+        system:
+        import nixpkgs {
+          inherit system;
+        }
+      );
     in
     {
-      devShells = forAllSystems (system:
+      devShells = forAllSystems (
+        system:
         let
           pkgs = nixpkgsFor.${system};
         in
         {
           default = pkgs.mkShell {
-            buildInputs = with pkgs;
-              [
-                usbutils
-                nixpkgs-fmt
-              ];
+            buildInputs = with pkgs; [
+              usbutils
+              nixpkgs-fmt
+            ];
           };
-        });
+        }
+      );
 
       overlays.default = final: prev: {
         virtualhere-client-gui = final.callPackage ./pkgs/gui-client.nix { };
         virtualhere-client-cli = final.callPackage ./pkgs/cli-client.nix { };
       };
 
-      packages = forAllSystems (system:
+      packages = forAllSystems (
+        system:
         let
           pkgs = nixpkgsFor.${system};
         in

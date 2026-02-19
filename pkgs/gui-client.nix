@@ -1,8 +1,9 @@
-{ pkgs
-, stdenv
-, fetchurl
-, lib
-, ...
+{
+  pkgs,
+  stdenv,
+  fetchurl,
+  lib,
+  ...
 }:
 let
   vhuit64 = stdenv.mkDerivation rec {
@@ -25,7 +26,8 @@ let
     '';
   };
 
-  NIX_LD_LIBRARY_PATH = with pkgs;
+  NIX_LD_LIBRARY_PATH =
+    with pkgs;
     lib.makeLibraryPath [
       cairo.out
       fontconfig.lib
