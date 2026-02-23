@@ -19,14 +19,14 @@ let
       hash = "sha256-5VLgujw5gepu1mq/T+JMsvNAkGE6ooBglzfH7o282zw=";
     };
     vhuitarm64 = {
-      url = "https://web.archive.org/web/20260129210841id_/https://www.virtualhere.com/sites/default/files/usbclient/vhuitarm64";
+      url = "https://web.archive.org/web/20260219190832id_/https://www.virtualhere.com/sites/default/files/usbclient/vhuitarm64";
       hash = "sha256-Zn0qGfJWmFsVzWK6WOvp6vXIQbIsAmfmgb6UGL6bpMQ=";
     };
   };
 
   vhui = stdenv.mkDerivation rec {
     pname = "virtualhere-client-gui";
-    version = "unstable-2026-02-19";
+    version = "unstable-2026-02-23";
 
     src = fetchurl sources.${binaryName};
 

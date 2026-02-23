@@ -14,18 +14,18 @@ let
 
   sources = {
     vhclientx86_64 = {
-      url = "https://web.archive.org/web/20260219190242id_/https://www.virtualhere.com/sites/default/files/usbclient/vhclientx86_64";
+      url = "https://web.archive.org/web/20260222003530id_/https://www.virtualhere.com/sites/default/files/usbclient/vhclientx86_64";
       hash = "sha256-iZ0Ei7b6h4OJlehJlp0ap+YaoVqkrNeIDsHyIrXfUhI=";
     };
     vhclientarm64 = {
-      url = "https://web.archive.org/web/20260130001410id_/https://www.virtualhere.com/sites/default/files/usbclient/vhclientarm64";
+      url = "https://web.archive.org/web/20260223002934id_/https://www.virtualhere.com/sites/default/files/usbclient/vhclientarm64";
       hash = "sha256-pNTLHUwiL6I6IqtpJW0tULvOTPPdUqFRhKerUfuStH0=";
     };
   };
 in
 stdenv.mkDerivation rec {
   pname = "virtualhere-client-cli";
-  version = "unstable-2026-02-19";
+  version = "unstable-2026-02-23";
 
   src = fetchurl sources.${binaryName};
 
