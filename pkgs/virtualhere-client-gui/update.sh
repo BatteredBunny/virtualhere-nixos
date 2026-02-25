@@ -17,16 +17,24 @@ update_binary() {
   local hash_line_num=$((url_line_num + 1))
 
   local current_url current_hash
-  current_url=$(sed -n "${url_line_num}p" "$nix_file" | grep -oP '"\K[^"]+' || true)
-  current_hash=$(sed -n "${hash_line_num}p" "$nix_file" | grep -oP '"\K[^"]+' || true)
+  current_url=$(sed -n "${url_line_num}p" "$nix_file" | sed -E 's/.*"([^"]+)".*/\1/')
+  current_hash=$(sed -n "${hash_line_num}p" "$nix_file" | sed -E 's/.*"([^"]+)".*/\1/')
 
   echo "$binary_name: checking upstream..."
-  local new_hash
-  new_hash=$(nix store prefetch-file "$upstream_url" --json | jq -r .hash)
+  local upstream_hash
+  upstream_hash=$(nix store prefetch-file "$upstream_url" --json | jq -r .hash)
 
-  if [ "$new_hash" = "$current_hash" ] && [[ "$current_url" == *"web.archive.org"* ]]; then
-    echo "$binary_name: already up-to-date"
-    return
+  if [[ "$current_url" == *"web.archive.org"* ]]; then
+    echo "$binary_name: verifying current archive.org URL..."
+    local archive_hash
+    archive_hash=$(nix store prefetch-file "$current_url" --json | jq -r .hash)
+
+    if [ "$archive_hash" = "$upstream_hash" ]; then
+      echo "$binary_name: already up-to-date (archive.org matches upstream: $upstream_hash)"
+      return
+    fi
+
+    echo "$binary_name: upstream changed (archive: $archive_hash, upstream: $upstream_hash)"
   fi
 
   echo "$binary_name: saving to archive.org..."
