@@ -15,18 +15,18 @@ let
 
   sources = {
     vhuit64 = {
-      url = "https://web.archive.org/web/20260219081036id_/https://www.virtualhere.com/sites/default/files/usbclient/vhuit64";
+      url = "https://web.archive.org/web/20260225181331id_/https://www.virtualhere.com/sites/default/files/usbclient/vhuit64";
       hash = "sha256-5VLgujw5gepu1mq/T+JMsvNAkGE6ooBglzfH7o282zw=";
     };
     vhuitarm64 = {
-      url = "https://web.archive.org/web/20260219190832id_/https://www.virtualhere.com/sites/default/files/usbclient/vhuitarm64";
-      hash = "sha256-Zn0qGfJWmFsVzWK6WOvp6vXIQbIsAmfmgb6UGL6bpMQ=";
+      url = "https://web.archive.org/web/20260303003206id_/https://www.virtualhere.com/sites/default/files/usbclient/vhuitarm64";
+      hash = "sha256-k9BiWclRDMbXBRLN5vUZlEozmVx0HTl5Ycayu9oKWyc=";
     };
   };
 
   vhui = stdenv.mkDerivation rec {
     pname = "virtualhere-client-gui";
-    version = "unstable-2026-02-23";
+    version = "unstable-2026-03-03";
 
     src = fetchurl sources.${binaryName};
 
