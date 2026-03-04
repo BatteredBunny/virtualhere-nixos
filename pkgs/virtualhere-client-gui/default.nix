@@ -15,8 +15,8 @@ let
 
   sources = {
     vhuit64 = {
-      url = "https://web.archive.org/web/20260225181331id_/https://www.virtualhere.com/sites/default/files/usbclient/vhuit64";
-      hash = "sha256-5VLgujw5gepu1mq/T+JMsvNAkGE6ooBglzfH7o282zw=";
+      url = "https://web.archive.org/web/20260303003100id_/https://www.virtualhere.com/sites/default/files/usbclient/vhuit64";
+      hash = "sha256-ylYHYQlJg0B6y6HLri1lQv/xHAGoxMeqNOgk916UH8c=";
     };
     vhuitarm64 = {
       url = "https://web.archive.org/web/20260303003206id_/https://www.virtualhere.com/sites/default/files/usbclient/vhuitarm64";
@@ -26,7 +26,7 @@ let
 
   vhui = stdenv.mkDerivation rec {
     pname = "virtualhere-client-gui";
-    version = "unstable-2026-03-03";
+    version = "unstable-2026-03-04";
 
     src = fetchurl sources.${binaryName};
 
