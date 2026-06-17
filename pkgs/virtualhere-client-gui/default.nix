@@ -70,9 +70,8 @@ let
       pango.out
       wayland-scanner.out
 
-      # TODO: Refactor when nixos 25.11 gets deprecated
-      xorg.libSM.out
-      xorg.libX11.out
+      libsm.out
+      libx11.out
     ];
 in
 pkgs.writeShellScriptBin "virtualhere-client-gui" ''
