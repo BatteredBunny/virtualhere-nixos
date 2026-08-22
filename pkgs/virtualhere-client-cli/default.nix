@@ -14,7 +14,7 @@ let
 
   sources = {
     vhclientx86_64 = {
-      url = "https://web.archive.org/web/20260729022801id_/https://www.virtualhere.com/sites/default/files/usbclient/vhclientx86_64";
+      url = "https://web.archive.org/web/20260822010555id_/https://www.virtualhere.com/sites/default/files/usbclient/vhclientx86_64";
       hash = "sha256-HIk681IxaDuj1/pU/fvHIlJAFe52TRS+UR0P2gsNkVk=";
     };
     vhclientarm64 = {
@@ -25,7 +25,7 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "virtualhere-client-cli";
-  version = "unstable-2026-07-29";
+  version = "unstable-2026-08-22";
 
   src = fetchurl sources.${binaryName};
 
