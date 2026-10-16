@@ -2,6 +2,7 @@
   stdenv,
   fetchurl,
   lib,
+  versionCheckHook,
   ...
 }:
 let
@@ -25,7 +26,7 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "virtualhere-client-cli";
-  version = "unstable-2026-10-01";
+  version = "6.0.3";
 
   src = fetchurl sources.${binaryName};
 
@@ -38,9 +39,14 @@ stdenv.mkDerivation rec {
     ln -s $out/bin/${binaryName} $out/bin/virtualhere-client-cli
   '';
 
+  doInstallCheck = stdenv.buildPlatform.canExecute stdenv.hostPlatform;
+  nativeInstallCheckInputs = [ versionCheckHook ];
+  versionCheckProgramArg = "--help";
+
   passthru.updateScript = ./update.sh;
 
   meta = {
+    mainProgram = "virtualhere-client-cli";
     description = "VirtualHere USB client CLI";
     homepage = "https://www.virtualhere.com/usb_client_software";
     license = lib.licenses.unfree;

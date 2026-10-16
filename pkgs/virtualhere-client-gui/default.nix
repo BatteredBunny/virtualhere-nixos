@@ -6,6 +6,8 @@
   ...
 }:
 let
+  version = "6.0.3";
+
   binaryName =
     {
       x86_64-linux = "vhuit64";
@@ -15,8 +17,8 @@ let
 
   sources = {
     vhuit64 = {
-      url = "https://web.archive.org/web/20261001041330id_/https://www.virtualhere.com/sites/default/files/usbclient/vhuit64";
-      hash = "sha256-sFQBcgKMUPebTi8lVQ8RyOn05NLmPUj59+D1XP+J7tU=";
+      url = "https://web.archive.org/web/20261011040340id_/https://www.virtualhere.com/sites/default/files/usbclient/vhuit64";
+      hash = "sha256-8zl9pDpK13PL3TUGreSnYJRgUXnn6gKdJvlOkqvjvvE=";
     };
     vhuitarm64 = {
       url = "https://web.archive.org/web/20261001041334id_/https://www.virtualhere.com/sites/default/files/usbclient/vhuitarm64";
@@ -26,11 +28,11 @@ let
 
   vhui = stdenv.mkDerivation rec {
     pname = "virtualhere-client-gui";
-    version = "unstable-2026-10-11";
+    inherit version;
 
     src = fetchurl sources.${binaryName};
 
-    buildInputs = with pkgs; [ upx ];
+    nativeBuildInputs = with pkgs; [ upx ];
 
     unpackPhase = "true";
 
@@ -41,7 +43,21 @@ let
       upx -d $out/bin/${binaryName}
     '';
 
-    passthru.updateScript = ./update.sh;
+    doInstallCheck = stdenv.buildPlatform.canExecute stdenv.hostPlatform;
+    nativeInstallCheckInputs = [ pkgs.versionCheckHook ];
+
+    versionCheckProgramArg = "--help";
+    versionCheckKeepEnvironment = [
+      "out"
+      "TMPDIR"
+    ];
+
+    # Will refuse to print help menu without this
+    versionCheckProgram = pkgs.writeShellScript "virtualhere-client-gui-version" ''
+      export HOME="$TMPDIR"
+      exec ${lib.getExe pkgs.xvfb-run} -a ${stdenv.cc.bintools.dynamicLinker} \
+        --library-path ${NIX_LD_LIBRARY_PATH} "$out/bin/${binaryName}" "$@"
+    '';
 
     meta = {
       description = "VirtualHere USB client GUI";
@@ -57,24 +73,32 @@ let
   NIX_LD_LIBRARY_PATH =
     with pkgs;
     lib.makeLibraryPath [
+      at-spi2-core
       cairo.out
       fontconfig.lib
+      freetype
       gdk-pixbuf.out
       glib.out
       gtk3.out
       libGL.out
       wayland.out
       libgcc.lib
+      libjpeg
       libxkbcommon.out
       libz.out
       pango.out
-      wayland-scanner.out
 
       libsm.out
       libx11.out
+      libxtst
+      libxxf86vm
     ];
 in
-pkgs.writeShellScriptBin "virtualhere-client-gui" ''
+(pkgs.writeShellScriptBin "virtualhere-client-gui" ''
   export NIX_LD_LIBRARY_PATH='${NIX_LD_LIBRARY_PATH}'${"\${NIX_LD_LIBRARY_PATH:+':'}$NIX_LD_LIBRARY_PATH"}
   exec ${vhui}/bin/${binaryName} "$@"
-''
+'').overrideAttrs
+  {
+    inherit version;
+    passthru.updateScript = ./update.sh;
+  }
