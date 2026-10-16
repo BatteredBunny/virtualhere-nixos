@@ -1,0 +1,28 @@
+name: Build packages
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        runner: [ubuntu-latest, ubuntu-26.04-arm]
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: cachix/install-nix-action@448cde739abec1eaf0646249e3d25bb8d9bc7702 # v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: "experimental-features = nix-command flakes"
+      - name: Build CLI and GUI
+        env:
+          NIXPKGS_ALLOW_UNFREE: "1"
+        run: nix build --impure --no-link -L .#virtualhere-client-cli .#virtualhere-client-gui
