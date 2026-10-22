@@ -121,7 +121,7 @@ def update_binary(contents, binary):
     return contents[:start] + body + contents[end:]
 
 
-def update(package, force=False):
+def update(package, force=False, commit=False):
     package_name = f"virtualhere-client-{package}"
     package_dir = Path(__file__).resolve().parent / package_name
     original = package_dir / "default.nix"
@@ -129,8 +129,9 @@ def update(package, force=False):
     version_matches = list(VERSION.finditer(contents))
     if len(version_matches) != 1:
         raise UpdateError("expected exactly one package version")
+    old_version = version_matches[0].group(2)
     version = latest_version()
-    if version_matches[0].group(2) == version and not force:
+    if old_version == version and not force:
         print(f"{package_name}: already at {version} (use --force to verify sources)")
         return
 
@@ -152,6 +153,17 @@ def update(package, force=False):
         staged_file.replace(original)
         print(f"{package_name}: updated to {version}")
 
+    if commit:
+        if old_version == version:
+            message = f"{package_name}: update sources"
+        else:
+            message = f"{package_name} {old_version} -> {version}"
+        subprocess.run(
+            ["git", "commit", "--message", message, "--", str(original)],
+            cwd=package_dir,
+            check=True,
+        )
+
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -161,9 +173,14 @@ def main():
         action="store_true",
         help="verify sources even if the version matches",
     )
+    parser.add_argument(
+        "--commit",
+        action="store_true",
+        help="commit the updated package to git",
+    )
     args = parser.parse_args()
     try:
-        update(args.package, args.force)
+        update(args.package, args.force, args.commit)
     except (
         UpdateError,
         OSError,

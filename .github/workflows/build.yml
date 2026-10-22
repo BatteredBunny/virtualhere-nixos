@@ -21,7 +21,6 @@ jobs:
       - uses: cachix/install-nix-action@448cde739abec1eaf0646249e3d25bb8d9bc7702 # v31
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
-          extra_nix_config: "experimental-features = nix-command flakes"
       - name: Build CLI and GUI
         env:
           NIXPKGS_ALLOW_UNFREE: "1"

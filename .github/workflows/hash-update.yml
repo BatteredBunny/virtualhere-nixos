@@ -19,16 +19,18 @@ jobs:
       - uses: cachix/install-nix-action@448cde739abec1eaf0646249e3d25bb8d9bc7702 # v31
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
-          extra_nix_config: "experimental-features = nix-command flakes"
           nix_path: nixpkgs=channel:nixos-unstable
-      - name: Run update script
-        run: ./update.sh
-      - uses: EndBug/add-and-commit@cc9c08ba6c8df3b93a8f2db63e89b98368ae2ae8 # v11.1.1
+      - name: Update and commit packages
+        env:
+          GIT_AUTHOR_NAME: github-actions[bot]
+          GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: github-actions[bot]
+          GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+        run: ./update.sh --commit
+      - name: Push changes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GIT_CONFIG_COUNT: "1"
           GIT_CONFIG_KEY_0: credential.https://github.com.helper
           GIT_CONFIG_VALUE_0: '!f() { printf "%s\n" "username=x-access-token" "password=$GH_TOKEN"; }; f'
-        with:
-          default_author: github_actions
-          message: "update packages"
+        run: git push
